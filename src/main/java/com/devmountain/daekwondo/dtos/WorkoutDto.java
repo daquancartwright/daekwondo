@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -17,6 +18,10 @@ public class WorkoutDto implements Serializable {
     private String description;
     private int duration;
     private String difficultyLevel;
+
+    // Maybe
+    private UserDto userDto;
+    private List<ExerciseDto> exerciseDtos;
 
     public WorkoutDto(Workout workout) {
         this.workoutId = workout.getWorkoutId() != null ? workout.getWorkoutId() : 0L;

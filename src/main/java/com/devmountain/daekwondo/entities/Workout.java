@@ -1,5 +1,6 @@
 package com.devmountain.daekwondo.entities;
 
+import com.devmountain.daekwondo.dtos.WorkoutDto;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import jakarta.persistence.*;
@@ -32,5 +33,22 @@ public class Workout {
     @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL)
     @JsonBackReference
     private List<Exercise> exercises;
+
+    public Workout(WorkoutDto workoutDto) {
+        this.title = workoutDto.getTitle();
+        this.duration = workoutDto.getDuration();
+        this.difficultyLevel = workoutDto.getDifficultyLevel();
+        this.description = workoutDto.getDescription();
+        // Maybe
+//        this.user = new User(workoutDto.getUserDto());
+//        this.exercises =
+    }
+
+    public void updateFromDto(WorkoutDto workoutDto) {
+        this.title = workoutDto.getTitle();
+        this.duration = workoutDto.getDuration();
+        this.difficultyLevel = workoutDto.getDifficultyLevel();
+        this.description = workoutDto.getDescription();
+    }
 
 }

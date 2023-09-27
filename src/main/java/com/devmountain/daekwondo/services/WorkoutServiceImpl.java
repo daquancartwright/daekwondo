@@ -1,11 +1,14 @@
 package com.devmountain.daekwondo.services;
 
+import com.devmountain.daekwondo.dtos.WorkoutDto;
 import com.devmountain.daekwondo.entities.Workout;
 import com.devmountain.daekwondo.repositories.WorkoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WorkoutServiceImpl implements WorkoutService {
@@ -17,27 +20,47 @@ public class WorkoutServiceImpl implements WorkoutService {
     }
 
     @Override
-    public Workout getWorkoutById(Long workoutId) {
-        return workoutRepository.findById(workoutId).orElse(null);
+    @Transactional(readOnly = true)
+    public List<WorkoutDto> getAllWorkouts() {
+        List<Workout> workouts = workoutRepository.findAll();
+        return workouts.stream()
+                .map(WorkoutDto::new)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Workout> getAllWorkouts() {
-        return workoutRepository.findAll();
+    @Transactional(readOnly = true)
+    public WorkoutDto getWorkoutById(Long id) {
+        Workout workout = workoutRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Workout not found with ID: " + id));
+        return new WorkoutDto(workout);
     }
 
     @Override
-    public void createWorkout(Workout workout) {
-        workoutRepository.save(workout);
+    @Transactional
+    public WorkoutDto createWorkout(WorkoutDto workoutDto) {
+        Workout workout = new Workout(workoutDto);
+        workout = workoutRepository.save(workout);
+        return new WorkoutDto(workout);
     }
 
     @Override
-    public void updateWorkout(Workout workout) {
-        workoutRepository.save(workout);
+    @Transactional
+    public WorkoutDto updateWorkout(Long id, WorkoutDto workoutDto) {
+        Workout existingWorkout = workoutRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Workout not found with ID: " + id));
+
+        // Update the existing workout with the new data
+        existingWorkout.updateFromDto(workoutDto);
+
+        return new WorkoutDto(workoutRepository.save(existingWorkout));
     }
 
     @Override
-    public void deleteWorkout(Long workoutId) {
-        workoutRepository.deleteById(workoutId);
+    @Transactional
+    public void deleteWorkout(Long id) {
+        workoutRepository.deleteById(id);
     }
+
+    // You can add more methods here as needed
 }
