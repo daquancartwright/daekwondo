@@ -1,11 +1,16 @@
+// Workout.java
+
 package com.devmountain.daekwondo.entities;
 
+import com.devmountain.daekwondo.dtos.ExerciseDto;
 import com.devmountain.daekwondo.dtos.WorkoutDto;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import jakarta.persistence.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "workouts")
@@ -15,6 +20,7 @@ import java.util.List;
 public class Workout {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "workout_id")
     private Long workoutId;
 
     @Column(nullable = false)
@@ -30,7 +36,7 @@ public class Workout {
     @JsonBackReference
     private User user;
 
-    @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
     private List<Exercise> exercises;
 
@@ -39,9 +45,10 @@ public class Workout {
         this.duration = workoutDto.getDuration();
         this.difficultyLevel = workoutDto.getDifficultyLevel();
         this.description = workoutDto.getDescription();
-        // Maybe
-//        this.user = new User(workoutDto.getUserDto());
-//        this.exercises =
+        this.user = new User(workoutDto.getUserDto());
+        this.exercises = workoutDto.getExerciseDtos() != null
+                ? workoutDto.getExerciseDtos().stream().map(Exercise::new).collect(Collectors.toList())
+                : Collections.emptyList();
     }
 
     public void updateFromDto(WorkoutDto workoutDto) {
@@ -50,5 +57,4 @@ public class Workout {
         this.difficultyLevel = workoutDto.getDifficultyLevel();
         this.description = workoutDto.getDescription();
     }
-
 }

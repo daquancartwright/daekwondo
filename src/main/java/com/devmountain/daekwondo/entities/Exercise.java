@@ -1,5 +1,8 @@
+// Exercise.java
+
 package com.devmountain.daekwondo.entities;
 
+import com.devmountain.daekwondo.dtos.ExerciseDto;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import jakarta.persistence.*;
@@ -30,12 +33,12 @@ public class Exercise {
     @JsonBackReference
     private Workout workout;
 
-    public Exercise(String exerciseName, int sets, int reps, double weight, String notes) {
-        this.exerciseName = exerciseName;
-        this.sets = sets;
-        this.reps = reps;
-        this.weight = weight;
-        this.notes = notes;
+    public Exercise(ExerciseDto exerciseDto) {
+        this.exerciseName = exerciseDto.getExerciseName();
+        this.sets = exerciseDto.getSets();
+        this.reps = exerciseDto.getReps();
+        this.weight = exerciseDto.getWeight();
+        this.notes = exerciseDto.getNotes();
     }
 
 }

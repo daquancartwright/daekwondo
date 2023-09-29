@@ -1,5 +1,6 @@
-package com.devmountain.daekwondo.controllers;
+// ExerciseController.java
 
+package com.devmountain.daekwondo.controllers;
 
 import com.devmountain.daekwondo.dtos.ExerciseDto;
 import com.devmountain.daekwondo.services.ExerciseService;

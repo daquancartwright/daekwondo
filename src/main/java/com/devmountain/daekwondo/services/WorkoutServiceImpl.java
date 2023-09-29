@@ -1,3 +1,5 @@
+// WorkoutServiceImpl.java
+
 package com.devmountain.daekwondo.services;
 
 import com.devmountain.daekwondo.dtos.WorkoutDto;
@@ -12,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class WorkoutServiceImpl implements WorkoutService {
+
     private final WorkoutRepository workoutRepository;
 
     @Autowired
@@ -39,9 +42,14 @@ public class WorkoutServiceImpl implements WorkoutService {
     @Override
     @Transactional
     public WorkoutDto createWorkout(WorkoutDto workoutDto) {
-        Workout workout = new Workout(workoutDto);
-        workout = workoutRepository.save(workout);
-        return new WorkoutDto(workout);
+        try {
+            Workout workout = new Workout(workoutDto);
+            workout = workoutRepository.save(workout);
+            return new WorkoutDto(workout);
+        } catch (Exception e) {
+            // Log and return an error message
+            throw new RuntimeException("Failed to create the workout. Please check your input data.");
+        }
     }
 
     @Override
@@ -62,5 +70,5 @@ public class WorkoutServiceImpl implements WorkoutService {
         workoutRepository.deleteById(id);
     }
 
-    // You can add more methods here as needed
+
 }

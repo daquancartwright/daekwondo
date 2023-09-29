@@ -19,7 +19,6 @@ public class UserDto implements Serializable {
     private String name;
     private int age;
     private double height;
-//    private double weight;
     private double weight;
 
     public UserDto(User user) {

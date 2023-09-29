@@ -1,3 +1,5 @@
+// WorkoutDto.java
+
 package com.devmountain.daekwondo.dtos;
 
 import com.devmountain.daekwondo.entities.Workout;
@@ -12,14 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkoutDto implements Serializable {
-    private Long workoutId;
-    private Long userId;
+    private Long workoutId; // Primary Key
+    private Long userId; // Foreign Key
     private String title;
     private String description;
     private int duration;
     private String difficultyLevel;
-
-    // Maybe
     private UserDto userDto;
     private List<ExerciseDto> exerciseDtos;
 
