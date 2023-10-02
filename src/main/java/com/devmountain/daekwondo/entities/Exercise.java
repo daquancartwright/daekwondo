@@ -41,4 +41,10 @@ public class Exercise {
         this.notes = exerciseDto.getNotes();
     }
 
+    // Constructor to create Exercise with both ExerciseDto and Workout
+    public Exercise(ExerciseDto exerciseDto, Workout workout) {
+        this(exerciseDto);
+        this.workout = workout;
+    }
+
 }

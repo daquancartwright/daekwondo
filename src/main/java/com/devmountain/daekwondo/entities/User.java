@@ -42,8 +42,4 @@ public class User {
         this.height = userDto.getHeight();
         this.weight = userDto.getWeight();
     }
-
 }
-
-
-

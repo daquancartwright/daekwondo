@@ -32,14 +32,13 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
-
     @Override
     public List<String> userLogin(UserDto userDto){
         List<String> response = new ArrayList<>();
         Optional<User> userOptional = userRepository.findByUsername(userDto.getUsername());
         if (userOptional.isPresent()){
             if (passwordEncoder.matches(userDto.getPassword(), userOptional.get().getPassword())){
-                response.add("http://localhost:8888/home.html");
+                response.add("http://localhost:8888/dashboard.html");
                 response.add(String.valueOf(userOptional.get().getUserId()));
             } else {
                 response.add("Username or password incorrect");
@@ -48,5 +47,12 @@ public class UserServiceImpl implements UserService {
             response.add("Username or password incorrect");
         }
         return response;
+    }
+
+    @Override
+    public UserDto getUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+        return new UserDto(user);
     }
 }

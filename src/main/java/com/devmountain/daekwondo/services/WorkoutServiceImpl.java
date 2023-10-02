@@ -1,16 +1,17 @@
-// WorkoutServiceImpl.java
-
 package com.devmountain.daekwondo.services;
 
+import com.devmountain.daekwondo.dtos.ExerciseDto;
 import com.devmountain.daekwondo.dtos.WorkoutDto;
+import com.devmountain.daekwondo.entities.Exercise;
 import com.devmountain.daekwondo.entities.Workout;
 import com.devmountain.daekwondo.repositories.WorkoutRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class WorkoutServiceImpl implements WorkoutService {
@@ -26,49 +27,63 @@ public class WorkoutServiceImpl implements WorkoutService {
     @Transactional(readOnly = true)
     public List<WorkoutDto> getAllWorkouts() {
         List<Workout> workouts = workoutRepository.findAll();
-        return workouts.stream()
-                .map(WorkoutDto::new)
-                .collect(Collectors.toList());
+        List<WorkoutDto> workoutDtos = new ArrayList<>();
+        for (Workout workout : workouts) {
+            WorkoutDto workoutDto = new WorkoutDto();
+            BeanUtils.copyProperties(workout, workoutDto);
+            workoutDtos.add(workoutDto);
+        }
+        return workoutDtos;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public WorkoutDto getWorkoutById(Long id) {
-        Workout workout = workoutRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Workout not found with ID: " + id));
-        return new WorkoutDto(workout);
+    public WorkoutDto getWorkoutById(Long workoutId) {
+        Workout workout = workoutRepository.findById(workoutId)
+                .orElseThrow(() -> new IllegalArgumentException("Workout not found with ID: " + workoutId));
+        WorkoutDto workoutDto = new WorkoutDto();
+        BeanUtils.copyProperties(workout, workoutDto);
+        return workoutDto;
     }
 
     @Override
     @Transactional
     public WorkoutDto createWorkout(WorkoutDto workoutDto) {
-        try {
-            Workout workout = new Workout(workoutDto);
-            workout = workoutRepository.save(workout);
-            return new WorkoutDto(workout);
-        } catch (Exception e) {
-            // Log and return an error message
-            throw new RuntimeException("Failed to create the workout. Please check your input data.");
-        }
+        Workout workout = new Workout(workoutDto);
+        workout.setExercises(mapExerciseDtos(workoutDto.getExerciseDtos(), workout));
+        workout = workoutRepository.save(workout);
+        workoutDto.setWorkoutId(workout.getWorkoutId());
+        return workoutDto;
     }
 
     @Override
     @Transactional
-    public WorkoutDto updateWorkout(Long id, WorkoutDto workoutDto) {
-        Workout existingWorkout = workoutRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Workout not found with ID: " + id));
+    public WorkoutDto updateWorkout(Long workoutId, WorkoutDto workoutDto) {
+        Workout existingWorkout = workoutRepository.findById(workoutId)
+                .orElseThrow(() -> new IllegalArgumentException("Workout not found with ID: " + workoutId));
 
-        // Update the existing workout with the new data
         existingWorkout.updateFromDto(workoutDto);
+        existingWorkout.setExercises(mapExerciseDtos(workoutDto.getExerciseDtos(), existingWorkout));
 
-        return new WorkoutDto(workoutRepository.save(existingWorkout));
+        existingWorkout = workoutRepository.save(existingWorkout);
+        BeanUtils.copyProperties(existingWorkout, workoutDto);
+        return workoutDto;
     }
 
     @Override
     @Transactional
-    public void deleteWorkout(Long id) {
-        workoutRepository.deleteById(id);
+    public void deleteWorkout(Long workoutId) {
+        workoutRepository.deleteById(workoutId);
     }
 
-
+    private List<Exercise> mapExerciseDtos(List<ExerciseDto> exerciseDtos, Workout workout) {
+        List<Exercise> exercises = new ArrayList<>();
+        if (exerciseDtos != null) {
+            for (ExerciseDto exerciseDto : exerciseDtos) {
+                Exercise exercise = new Exercise(exerciseDto, workout);
+                exercises.add(exercise);
+            }
+        }
+        return exercises;
+    }
 }

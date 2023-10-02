@@ -6,10 +6,7 @@ import com.devmountain.daekwondo.dtos.UserDto;
 import com.devmountain.daekwondo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,4 +29,9 @@ public class UserController {
     // Login Method
     @PostMapping("/login")
     public List<String> userLogin(@RequestBody UserDto userDto) { return userService.userLogin(userDto); }
-}
+
+    // Get User Information
+    @GetMapping("/{userId}")
+    public UserDto getUserById(@PathVariable Long userId) {
+        return userService.getUserById(userId);
+    }}

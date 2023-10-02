@@ -20,7 +20,6 @@ public class WorkoutDto implements Serializable {
     private String description;
     private int duration;
     private String difficultyLevel;
-    private UserDto userDto;
     private List<ExerciseDto> exerciseDtos;
 
     public WorkoutDto(Workout workout) {
