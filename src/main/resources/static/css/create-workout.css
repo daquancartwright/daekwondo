@@ -1,0 +1,43 @@
+/* Add your custom CSS styles here */
+
+/* Center the form */
+.container {
+    text-align: center;
+    padding-top: 20px;
+}
+
+/* Style the form header */
+header {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Style the form section */
+#workout-form {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+/* Style the exercise form */
+.exercise-form {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+    display: none; /* Initially hide the exercise form */
+}
+
+/* Style the buttons */
+.btn-success {
+    margin-right: 10px;
+}
+
+/* Style the exercise input fields */
+.form-group {
+    margin-bottom: 10px;
+}
+
+/* Add more custom styles as needed */

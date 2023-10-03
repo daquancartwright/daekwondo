@@ -44,4 +44,9 @@ public class ExerciseController {
     public ExerciseDto getExerciseById(@PathVariable Long exerciseId) {
         return exerciseService.getExerciseById(exerciseId);
     }
+
+    @GetMapping("/workout/{workoutId}")
+    public List<ExerciseDto> getExercisesByWorkoutId(@PathVariable Long workoutId) {
+        return exerciseService.getExercisesByWorkoutId(workoutId);
+    }
 }

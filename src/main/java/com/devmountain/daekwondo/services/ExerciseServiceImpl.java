@@ -52,6 +52,19 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<ExerciseDto> getExercisesByWorkoutId(Long workoutId) {
+        List<Exercise> exercises = exerciseRepository.findByWorkout_WorkoutId(workoutId);
+        List<ExerciseDto> exerciseDtos = new ArrayList<>();
+
+        for (Exercise exercise : exercises) {
+            exerciseDtos.add(new ExerciseDto(exercise));
+        }
+
+        return exerciseDtos;
+    }
+
+    @Override
     @Transactional
     public ExerciseDto createExercise(ExerciseDto exerciseDto) {
         Exercise exercise = new Exercise();

@@ -37,11 +37,45 @@
                     <textarea class="form-control" id="workout-description" rows="4" placeholder="Enter workout description" required></textarea>
                 </div>
 
+                <!-- Added Exercises Table -->
+                <table id="exercise-table">
+                    <!-- The table headers will be added dynamically when you create an exercise -->
+                    <!-- For example, Exercise Name, Sets, Reps, Weight, and Notes -->
+                </table>
+
+                <!-- Exercise Fields Section -->
+                <div class="exercise-form" id="exercise-form">
+                    <!-- Exercise Name Input -->
+                    <div class="form-group">
+                        <label for="exercise-name">Exercise Name</label>
+                        <input type="text" class="form-control" id="exercise-name" placeholder="Enter exercise name">
+                    </div>
+                    <!-- Sets Input -->
+                    <div class="form-group">
+                        <label for="exercise-sets">Sets</label>
+                        <input type="number" class="form-control" id="exercise-sets" placeholder="Enter sets">
+                    </div>
+                    <!-- Reps Input -->
+                    <div class="form-group">
+                        <label for="exercise-reps">Reps</label>
+                        <input type="number" class="form-control" id="exercise-reps" placeholder="Enter reps">
+                    </div>
+                    <!-- Weight Input -->
+                    <div class="form-group">
+                        <label for="exercise-weight">Weight</label>
+                        <input type="number" class="form-control" id="exercise-weight" placeholder="Enter weight">
+                    </div>
+                    <!-- Notes Input -->
+                    <div class="form-group">
+                        <label for="exercise-notes">Notes</label>
+                        <textarea class="form-control" id="exercise-notes" rows="2" placeholder="Enter notes"></textarea>
+                    </div>
+                    <!-- Create Exercise Button -->
+                    <button type="button" class="btn btn-success" id="create-exercise-button">Create Exercise</button>
+                </div>
+
                 <!-- Add Exercise Button -->
                 <button type="button" class="btn btn-success" id="add-exercise-button">Add Exercise</button>
-
-                <!-- Create Exercise Button -->
-                <button type="button" class="btn btn-primary" id="create-exercise-button">Create Exercise</button>
 
                 <!-- You can add more fields for exercises and details here -->
 
