@@ -4,14 +4,13 @@
 }
 
 .custom-navbar .navbar-brand {
-    color: #ff6600;
+    color: #007bff;
 }
 
 .custom-navbar .navbar-nav .nav-link {
-    color: #ff6600;
+    color: #007bff;
 }
 
-/* Custom Styling for Page */
 body {
     background-color: #ffffff;
     font-family: Arial, sans-serif;
@@ -53,7 +52,7 @@ header {
 
 #user-info h1 {
     font-size: 24px;
-    color: #ff6600;
+    color: #007bff;
 }
 
 .initial-view {

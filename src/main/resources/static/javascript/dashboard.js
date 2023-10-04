@@ -26,8 +26,10 @@ const workoutImages = [
     "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80",
     "https://images.unsplash.com/photo-1536922246289-88c42f957773?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2704&q=80",
     "https://images.unsplash.com/photo-1616803689943-5601631c7fec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80",
-    "https://images.unsplash.com/photo-1616803689943-5601631c7fec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80",
-    "https://images.unsplash.com/photo-1480264104733-84fb0b925be3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80"
+    "https://prod-ne-cdn-media.puregym.com/media/819394/gym-workout-plan-for-gaining-muscle_header.jpg?quality=80",
+    "https://images.unsplash.com/photo-1480264104733-84fb0b925be3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6PkGFkQcqySesYpLXDeoV0tvg0Dq7kAGBqA&usqp=CAU",
+    "https://mensfitness.co.uk/wp-content/uploads/sites/2/2023/07/shutterstock_2313734745-2.jpg?w=900"
 ]
 
 // Add Exercise Button Click Event
@@ -97,12 +99,6 @@ function createWorkoutCard(workout) {
     initialView.appendChild(workoutImage);
     initialView.appendChild(workoutTitle);
 
-    // Add click event listener to the deleteWorkoutButton to execute deleteWorkout
-    deleteWorkoutButton.addEventListener("click", (event) => {
-        event.stopPropagation(); // Prevent the click from propagating to the workout card
-        deleteWorkout(workout.workoutId);
-    });
-
     // Add click event listener to show workout details when clicked
     initialView.addEventListener("click", (event) => {
         // Prevent the click event from propagating to the body click event
@@ -119,27 +115,11 @@ function createWorkoutCard(workout) {
 
         // Display workout details
         workoutDetails.style.display = "block";
-    });
 
-    // Add click event listener to the document body
-    document.body.addEventListener("click", (event) => {
-        const clickedElement = event.target;
-
-        // Check if the click target is not the workout card
-        if (!workoutCard.contains(clickedElement)) {
-            // Hide the workout details
-            workoutDetails.style.display = "none";
-        }
-    });
-
-    // Prevent clicks within workoutDetails from closing it
-    workoutDetails.addEventListener("click", (event) => {
-        event.stopPropagation();
-    });
-
-    // Prevent clicks within exerciseForm from closing it
-    exerciseForm.addEventListener("click", (event) => {
-        event.stopPropagation();
+        // Set the delete button's click event handler to delete the specific workout
+        deleteWorkoutButton.onclick = () => {
+            deleteWorkout(workout.workoutId);
+        };
     });
 
     // Append initial view to the workout card
@@ -187,8 +167,9 @@ function deleteWorkout(workoutId) {
             // Workout deleted successfully, you can update the UI or take other actions as needed
             console.log(`Workout with ID ${workoutId} deleted successfully.`);
 
-            // Hide the workout details after deletion
-            workoutDetails.style.display = "none";
+            // Reload the page to reflect the changes
+            location.reload();
+
         } else {
             // Handle errors or display an error message
             console.error(`Error deleting workout with ID ${workoutId}`);
