@@ -1,3 +1,7 @@
+// dashboard.js
+
+document.addEventListener("DOMContentLoaded", () => {
+
 // Cookie
 const cookieArr = document.cookie.split("=");
 const userId = cookieArr[1];
@@ -6,12 +10,35 @@ console.log(userId);
 // DOM Elements
 const userStatsContainer = document.getElementById("user-stats");
 const workoutsList = document.getElementById("workouts-list");
-const workoutDetails = document.querySelector(".workoutDetails");
+const workoutDetails = document.getElementById("workoutDetails"); // Changed querySelector to getElementById
 const workoutTitleElement = document.getElementById("workoutTitle");
 const workoutDescriptionElement = document.getElementById("workoutDescription");
 const workoutDurationElement = document.getElementById("workoutDuration");
 const workoutDifficultyElement = document.getElementById("workoutDifficulty");
 const exerciseListElement = document.getElementById("exerciseList");
+const deleteWorkoutButton = document.getElementById("deleteWorkoutButton"); // Added this line
+const addExerciseButtton = document.getElementById("add-exercise-button"); // Added this line
+const exerciseForm = document.getElementById("exercise-form");
+let workoutsData = []
+
+const workoutImages = [
+    "https://images.unsplash.com/photo-1599058917212-d750089bc07e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2669&q=80",
+    "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80",
+    "https://images.unsplash.com/photo-1536922246289-88c42f957773?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2704&q=80",
+    "https://images.unsplash.com/photo-1616803689943-5601631c7fec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80",
+    "https://images.unsplash.com/photo-1616803689943-5601631c7fec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80",
+    "https://images.unsplash.com/photo-1480264104733-84fb0b925be3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80"
+]
+
+// Add Exercise Button Click Event
+addExerciseButtton.addEventListener("click", () => {
+    // Toggle the visibility of the exercise form
+    if (exerciseForm.style.display === "none" || exerciseForm.style.display === "") {
+        exerciseForm.style.display = "block"; // Show the exercise form
+    } else {
+        exerciseForm.style.display = "none"; // Hide the exercise form
+    }
+});
 
 // Headers
 const headers = {
@@ -33,12 +60,10 @@ async function getUserInfo(userId) {
 
         // Populate user data
         const userNameElement = document.getElementById("user-name");
-        const userAgeElement = document.getElementById("user-age");
         const userHeightElement = document.getElementById("user-height");
         const userWeightElement = document.getElementById("user-weight");
 
         userNameElement.textContent = userData.name;
-        userAgeElement.textContent = userData.age;
         userHeightElement.textContent = userData.height;
         userWeightElement.textContent = userData.weight;
 
@@ -57,25 +82,26 @@ function createWorkoutCard(workout) {
     const initialView = document.createElement("div");
     initialView.classList.add("initial-view");
 
-    // Create a div for the close "x" icon
-    const closeIcon = document.createElement("div");
-    closeIcon.classList.add("close-icon");
-    closeIcon.textContent = "x"; // You can customize the styling of this "x" icon with CSS
-
-    // Create an event listener to delete the workout
-    closeIcon.addEventListener("click", (event) => {
-        event.stopPropagation(); // Prevent the click from propagating to the workout card
-        deleteWorkout(workout.workoutId);
-    });
-
+    // Assign an image URL based on the workout's index in the array
+    const imageIndex = workoutsData.indexOf(workout) % workoutImages.length;
     const workoutImage = document.createElement("img");
-    workoutImage.src = "https://www.mensjournal.com/.image/t_share/MTk2MTM3NDUxNzA0NzU1MzQ1/man-lifting-main.jpg"; // Set the image source
+    workoutImage.src = workoutImages[imageIndex]; // Set the image source
     workoutImage.alt = "Workout Image";
     workoutImage.classList.add("workout-image");
 
     const workoutTitle = document.createElement("h3");
     workoutTitle.classList.add("workout-title");
     workoutTitle.textContent = workout.title;
+
+    // Append elements to the initial view
+    initialView.appendChild(workoutImage);
+    initialView.appendChild(workoutTitle);
+
+    // Add click event listener to the deleteWorkoutButton to execute deleteWorkout
+    deleteWorkoutButton.addEventListener("click", (event) => {
+        event.stopPropagation(); // Prevent the click from propagating to the workout card
+        deleteWorkout(workout.workoutId);
+    });
 
     // Add click event listener to show workout details when clicked
     initialView.addEventListener("click", (event) => {
@@ -111,17 +137,16 @@ function createWorkoutCard(workout) {
         event.stopPropagation();
     });
 
-    // Append elements to the initial view
-    initialView.appendChild(closeIcon);
-    initialView.appendChild(workoutImage);
-    initialView.appendChild(workoutTitle);
+    // Prevent clicks within exerciseForm from closing it
+    exerciseForm.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
 
     // Append initial view to the workout card
     workoutCard.appendChild(initialView);
 
     return workoutCard;
 }
-
 
 // Function to fetch and populate workout cards (continued)
 async function getWorkouts(userId) {
@@ -130,7 +155,7 @@ async function getWorkouts(userId) {
             method: "GET",
             headers: headers
         });
-        const workoutsData = await response.json();
+        workoutsData = await response.json(); // Assign the response to the global variable
 
         // Clear existing workout cards
         workoutsList.innerHTML = "";
@@ -161,6 +186,9 @@ function deleteWorkout(workoutId) {
         if (response.ok) {
             // Workout deleted successfully, you can update the UI or take other actions as needed
             console.log(`Workout with ID ${workoutId} deleted successfully.`);
+
+            // Hide the workout details after deletion
+            workoutDetails.style.display = "none";
         } else {
             // Handle errors or display an error message
             console.error(`Error deleting workout with ID ${workoutId}`);
@@ -249,3 +277,5 @@ async function loadExercises(workoutId) {
 // Call the functions to fetch and populate user data and workout cards
 getUserInfo(userId);
 getWorkouts(userId);
+
+});

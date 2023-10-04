@@ -76,6 +76,6 @@ public class Workout {
             this.exercises = new ArrayList<>();
         }
         this.exercises.add(exercise);
-        exercise.setWorkout(this); // Ensure bidirectional association
+        exercise.setWorkout(this);
     }
 }

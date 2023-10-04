@@ -1,3 +1,5 @@
+// create-workout.js
+
 // DOM Elements
 const createWorkoutForm = document.getElementById("create-workout-form");
 const addExerciseButton = document.getElementById("add-exercise-button");

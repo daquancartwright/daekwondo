@@ -1,19 +1,19 @@
 /* Custom CSS for Navbar */
 .custom-navbar {
-    background-color: #007bff; /* Orange background */
+    background-color: #007bff;
 }
 
 .custom-navbar .navbar-brand {
-    color: #ff6600; /* White text */
+    color: #ff6600;
 }
 
 .custom-navbar .navbar-nav .nav-link {
-    color: #ff6600; /* White text */
+    color: #ff6600;
 }
 
 /* Custom Styling for Page */
 body {
-    background-color: #ffffff; /* White background */
+    background-color: #ffffff;
     font-family: Arial, sans-serif;
 }
 
@@ -24,7 +24,7 @@ body {
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    background-color: #f0f0f0; /* Light grey background */
+    background-color: #f0f0f0;
 }
 
 .workoutDetails {
@@ -35,7 +35,7 @@ body {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     background-color: #f0f0f0;
-    display: none; /* Initially hide workout details */
+    display: none;
 }
 
 header {
@@ -44,7 +44,7 @@ header {
 }
 
 #user-info {
-    background-color: #ffffff; /* White background */
+    background-color: #ffffff;
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
@@ -53,7 +53,7 @@ header {
 
 #user-info h1 {
     font-size: 24px;
-    color: #ff6600; /* Orange text */
+    color: #ff6600;
 }
 
 .initial-view {
@@ -63,23 +63,23 @@ header {
     justify-content: center;
     text-align: center;
     cursor: pointer;
-    height: 100%; /* Set the height to 100% for vertical centering */
+    height: 100%;
 }
 
 .workout-card {
-    max-width: 200px; /* Adjust the maximum width as needed */
-    margin: 10px; /* Add margin for spacing between cards */
-    border: 1px solid #ddd; /* Add a border for better visibility */
+    max-width: 200px;
+    margin: 10px;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    background-color: #f0f0f0; /* Light grey background */
+    background-color: #f0f0f0;
     padding: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    display: inline-block; /* Display cards inline */
-    vertical-align: top; /* Align cards to the top */
+    display: inline-block;
+    vertical-align: top;
 }
 
 .workout-card:hover {
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); /* Add shadow on hover */
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
 
 .workout-image {
@@ -91,27 +91,27 @@ header {
 
 .workout-title {
     font-size: 18px;
-    color: #333; /* Adjust the color as needed */
+    color: #333;
     margin: 0;
 }
 
 .detailed-view {
-    display: none; /* Initially hide detailed view */
-    padding: 10px; /* Add padding for spacing inside the detailed view */
+    display: none;
+    padding: 10px;
 }
 
 .details-container {
-    display: none; /* Initially hide the container */
+    display: none;
 }
 
 .detailed-view p {
-    margin: 5px 0; /* Add margin for spacing between paragraphs */
-    font-size: 16px; /* Adjust the font size as needed */
+    margin: 5px 0;
+    font-size: 16px;
 }
 
 .btn-primary {
-    background-color: #ff6600; /* Orange background */
-    color: #ffffff; /* White text */
+    background-color: #ff6600;
+    color: #ffffff;
     border: none;
 }
 
@@ -122,7 +122,7 @@ header {
 footer {
     text-align: center;
     margin-top: 20px;
-    color: #888888; /* Grey text */
+    color: #888888;
     font-size: 14px;
 }
 
@@ -152,27 +152,27 @@ footer {
 /* Modify the CSS to style the exercise table */
 .exercise-table {
     width: 100%;
-    border-collapse: collapse; /* Collapse table borders */
-    margin-top: 10px; /* Add margin between table and previous content */
+    border-collapse: collapse;
+    margin-top: 10px;
 }
 
 .exercise-table th,
 .exercise-table td {
-    border: 1px solid #ddd; /* Add border to table cells */
+    border: 1px solid #ddd;
     padding: 5px;
     text-align: center;
 }
 
 .exercise-table th {
-    background-color: #f2f2f2; /* Header background color */
+    background-color: #f2f2f2;
 }
 
 .exercise-table tr:nth-child(even) {
-    background-color: #f2f2f2; /* Alternate row background color */
+    background-color: #f2f2f2;
 }
 
 .exercise-table tr:nth-child(odd) {
-    background-color: #fff; /* Alternate row background color */
+    background-color: #fff;
 }
 
 /* Style the sets and reps formatting */
@@ -193,31 +193,45 @@ footer {
 
 /* Updated styles for exercise details */
 .exercise-details p {
-    margin: 0; /* Remove default margin */
+    margin: 0;
 }
 
 /* Style the sets and reps list */
 .sets-reps-list {
-    margin-left: 20px; /* Add some indentation for sets and reps */
+    margin-left: 20px;
 }
 
 /* Style each set and rep item */
 .sets-reps-list-item {
-    display: inline-block; /* Display sets and reps inline */
-    margin-right: 5px; /* Add space between sets and reps */
+    display: inline-block;
+    margin-right: 5px;
 }
 
 /* Add this to your CSS file */
 .crossed-out {
-    text-decoration: line-through; /* Apply a line-through text decoration */
-    color: #999; /* Change the color of crossed-out elements (optional) */
+    text-decoration: line-through;
+    color: #999;
 }
 
 /* Style for the exercise list within workoutDetails */
 #exerciseList {
     list-style-type: none;
     padding: 0;
-    text-align: left; /* Align exercise list text to the left */
+    text-align: left;
 }
+
+.exercise-form {
+    max-width: 800px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    background-color: #f0f0f0;
+    padding: 20px;
+    display: none;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 
 
