@@ -104,6 +104,12 @@ function createWorkoutCard(workout) {
         // Prevent the click event from propagating to the body click event
         event.stopPropagation();
 
+        // Capture the workoutId from the clicked workout
+        const clickedWorkoutId = workout.workoutId;
+
+        // Store the clicked workoutId in local storage for later use
+        localStorage.setItem("currentWorkoutId", clickedWorkoutId);
+
         // Populate workout details
         workoutTitleElement.textContent = workout.title;
         workoutDescriptionElement.textContent = `Description: ${workout.description}`;
@@ -254,6 +260,71 @@ async function loadExercises(workoutId) {
         console.error("Error fetching exercises by workout ID:", error);
     }
 }
+
+// Function to add an exercise to the workout
+  async function addExerciseToWorkout(exerciseData) {
+    try {
+
+      // Get the current workoutId
+      const currentWorkoutId = localStorage.getItem("currentWorkoutId");
+
+      const response = await fetch(`http://localhost:8888/api/v1/workouts/${currentWorkoutId}`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          exerciseDto: exerciseData
+        })
+      });
+
+      if (response.ok) {
+        // Exercise added successfully, you can update the UI or take other actions as needed
+        console.log(`Exercise added to workout with ID ${currentWorkoutId}`);
+
+        // Clear the form fields
+        document.getElementById("exercise-name").value = "";
+        document.getElementById("exercise-sets").value = "";
+        document.getElementById("exercise-reps").value = "";
+        document.getElementById("exercise-weight").value = "";
+        document.getElementById("exercise-notes").value = "";
+
+        // Reload the page to reflect the changes
+        location.reload();
+      } else {
+        // Handle errors or display an error message
+        console.error(`Error adding exercise to workout with ID ${currentWorkoutId}`);
+      }
+    } catch (error) {
+      console.error("Error adding exercise to workout:", error);
+      console.error("Response Body:", responseBody);
+    }
+  }
+
+  // Event listener to handle saving an exercise
+  document.getElementById("save-exercise-button").addEventListener("click", () => {
+    // Get exercise information from the form
+    const exerciseName = document.getElementById("exercise-name").value;
+    const sets = parseInt(document.getElementById("exercise-sets").value);
+    const reps = parseInt(document.getElementById("exercise-reps").value);
+    const weight = parseFloat(document.getElementById("exercise-weight").value);
+    const notes = document.getElementById("exercise-notes").value;
+
+    // Create an object with the exercise data
+    const exerciseData = {
+      exerciseName,
+      sets,
+      reps,
+      weight,
+      notes
+    };
+
+    // Call the function to add the exercise to the workout
+    addExerciseToWorkout(exerciseData);
+
+  });
+
+
 
 // Call the functions to fetch and populate user data and workout cards
 getUserInfo(userId);
