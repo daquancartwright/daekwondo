@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WorkoutServiceImpl implements WorkoutService {
@@ -21,6 +22,15 @@ public class WorkoutServiceImpl implements WorkoutService {
     @Autowired
     public WorkoutServiceImpl(WorkoutRepository workoutRepository) {
         this.workoutRepository = workoutRepository;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<WorkoutDto> getWorkoutsByUserId(Long userId) {
+        List<Workout> workouts = workoutRepository.findByUserUserId(userId);
+        return workouts.stream()
+                .map(WorkoutDto::new)
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -1,0 +1,117 @@
+/* Custom CSS for Navbar */
+        .custom-navbar {
+            background-color: #007bff; /* Orange background */
+        }
+
+        .custom-navbar .navbar-brand {
+            color: #ff6600; /* White text */
+        }
+
+        .custom-navbar .navbar-nav .nav-link {
+            color: #ff6600; /* White text */
+        }
+
+        /* Custom Styling for Page */
+        body {
+            background-color: #ffffff; /* White background */
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            background-color: #f0f0f0; /* Light grey background */
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #user-info {
+            background-color: #ffffff; /* White background */
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        #user-info h1 {
+            font-size: 24px;
+            color: #ff6600; /* Orange text */
+        }
+
+        .initial-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            height: 100%; /* Set the height to 100% for vertical centering */
+        }
+
+        .workout-card {
+            max-width: 200px; /* Adjust the maximum width as needed */
+            margin: 10px; /* Add margin for spacing between cards */
+            border: 1px solid #ddd; /* Add a border for better visibility */
+            border-radius: 5px;
+            background-color: #f0f0f0; /* Light grey background */
+            padding: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block; /* Display cards inline */
+            vertical-align: top; /* Align cards to the top */
+        }
+
+
+        .workout-card:hover {
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); /* Add shadow on hover */
+        }
+
+        .workout-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .workout-title {
+            font-size: 18px;
+            color: #333; /* Adjust the color as needed */
+            margin: 0;
+        }
+
+        .detailed-view {
+            display: none; /* Initially hide detailed view */
+            padding: 10px; /* Add padding for spacing inside the detailed view */
+        }
+
+        .details-container {
+            display: none; /* Initially hide the container */
+        }
+
+        .detailed-view p {
+            margin: 5px 0; /* Add margin for spacing between paragraphs */
+            font-size: 16px; /* Adjust the font size as needed */
+        }
+
+        .btn-primary {
+            background-color: #ff6600; /* Orange background */
+            color: #ffffff; /* White text */
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #cc5500; /* Darker orange on hover */
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #888888; /* Grey text */
+            font-size: 14px;
+        }

@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface WorkoutService {
     List<WorkoutDto> getAllWorkouts();
+    List<WorkoutDto> getWorkoutsByUserId(Long userId);
     WorkoutDto getWorkoutById(Long workoutId);
     WorkoutDto createWorkout(WorkoutDto workoutDto);
     WorkoutDto updateWorkout(Long workoutId, WorkoutDto workoutDto);

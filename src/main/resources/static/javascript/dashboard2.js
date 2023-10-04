@@ -1,3 +1,5 @@
+//dashboard.js
+
 // Cookie
 const cookieArr = document.cookie.split("=");
 const userId = cookieArr[1];
@@ -52,28 +54,27 @@ function createWorkoutCard(workout) {
     initialView.classList.add("initial-view");
 
     const workoutImage = document.createElement("img");
-    workoutImage.src = "https://www.mensjournal.com/.image/t_share/MTk2MTM3NDUxNzA0NzU1MzQ1/man-lifting-main.jpg"; // Set the image source
+    workoutImage.src = "workout-image.jpg"; // Set the image source
     workoutImage.alt = "Workout Image";
-    workoutImage.classList.add("workout-image");
 
     const workoutTitle = document.createElement("h3");
     workoutTitle.classList.add("workout-title");
     workoutTitle.textContent = workout.title;
 
-//    // Add a button to show/hide detailed view
-//    const toggleButton = document.createElement("button");
-//    toggleButton.classList.add("toggle-button");
-//    toggleButton.textContent = "Show Details";
+    // Add a button to show/hide detailed view
+    const toggleButton = document.createElement("button");
+    toggleButton.classList.add("toggle-button");
+    toggleButton.textContent = "Show Details";
 
     // Create a div for the detailed view (hidden by default)
     const detailedView = document.createElement("div");
     detailedView.classList.add("detailed-view");
     detailedView.style.display = "none"; // Initially hide detailed view
 
-    // Create a container for both workout and exercise details
-    const detailsContainer = document.createElement("div");
-    detailsContainer.classList.add("details-container");
-    detailsContainer.style.display = "none"; // Initially hide the container
+    // Create a container for exercises and hide it initially
+    const exerciseContainer = document.createElement("div");
+    exerciseContainer.classList.add("exercise-container");
+    exerciseContainer.style.display = "none"; // Initially hide exercise container
 
     // Populate detailed view with workout information
     const workoutDescription = document.createElement("p");
@@ -88,28 +89,29 @@ function createWorkoutCard(workout) {
     // Append elements to the initial view
     initialView.appendChild(workoutImage);
     initialView.appendChild(workoutTitle);
-//    initialView.appendChild(toggleButton);
+    initialView.appendChild(toggleButton);
 
     // Append elements to the detailed view
     detailedView.appendChild(workoutDescription);
     detailedView.appendChild(workoutDuration);
     detailedView.appendChild(workoutDifficulty);
+    detailedView.appendChild(exerciseContainer);
 
-    // Add click event listener to toggle detailed view and exercises
-    workoutCard.addEventListener("click", () => {
+    // Add click event listener to toggle detailed view
+    toggleButton.addEventListener("click", () => {
         if (detailedView.style.display === "none") {
             detailedView.style.display = "block";
-            detailsContainer.style.display = "block"; // Show both workout and exercise details
+            exerciseContainer.style.display = "block"; // Show exercise details
         } else {
             detailedView.style.display = "none";
-            detailsContainer.style.display = "none"; // Hide both workout and exercise details
+            exerciseContainer.style.display = "none"; // Hide exercise details
         }
     });
 
     // Append initial view and detailed view to the workout card
     workoutCard.appendChild(initialView);
-    detailsContainer.appendChild(detailedView); // Append detailed view to the container
-    workoutCard.appendChild(detailsContainer); // Append container to the workout card
+    workoutCard.appendChild(detailedView);
+//    workoutCard.appendChild(exerciseContainer);
 
     return workoutCard;
 }
@@ -133,12 +135,17 @@ async function getWorkouts(userId) {
             // Get exercises by workout ID
             const exercises = await getExercisesByWorkoutId(workout.workoutId);
 
-            // Populate detailed view with exercise information
+            // Create a container for exercises and append them to the workout card
+            const exerciseContainer = document.createElement("div");
+            exerciseContainer.classList.add("exercise-container");
+
             exercises.forEach((exercise) => {
                 const exerciseItem = document.createElement("p");
                 exerciseItem.textContent = `${exercise.exerciseName}, Sets: ${exercise.sets}, Reps: ${exercise.reps}, Weight: ${exercise.weight}`;
-                workoutCard.querySelector(".detailed-view").appendChild(exerciseItem);
+                exerciseContainer.appendChild(exerciseItem);
             });
+
+            workoutCard.appendChild(exerciseContainer);
 
             // Append the workout card to the workouts list
             workoutsList.appendChild(workoutCard);

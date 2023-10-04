@@ -48,4 +48,10 @@ public class WorkoutController {
     public WorkoutDto getWorkoutById(@PathVariable Long workoutId) {
         return workoutService.getWorkoutById(workoutId);
     }
+
+    // Get workouts by user ID
+    @GetMapping("/user/{userId}")
+    public List<WorkoutDto> getWorkoutsByUserId(@PathVariable Long userId) {
+        return workoutService.getWorkoutsByUserId(userId);
+    }
 }
