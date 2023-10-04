@@ -1,5 +1,3 @@
-//dashboard.js
-
 // Cookie
 const cookieArr = document.cookie.split("=");
 const userId = cookieArr[1];
@@ -54,69 +52,97 @@ function createWorkoutCard(workout) {
     initialView.classList.add("initial-view");
 
     const workoutImage = document.createElement("img");
-    workoutImage.src = "workout-image.jpg"; // Set the image source
+    workoutImage.src = "https://www.mensjournal.com/.image/t_share/MTk2MTM3NDUxNzA0NzU1MzQ1/man-lifting-main.jpg"; // Set the image source
     workoutImage.alt = "Workout Image";
+    workoutImage.classList.add("workout-image");
 
     const workoutTitle = document.createElement("h3");
     workoutTitle.classList.add("workout-title");
     workoutTitle.textContent = workout.title;
-
-    // Add a button to show/hide detailed view
-    const toggleButton = document.createElement("button");
-    toggleButton.classList.add("toggle-button");
-    toggleButton.textContent = "Show Details";
 
     // Create a div for the detailed view (hidden by default)
     const detailedView = document.createElement("div");
     detailedView.classList.add("detailed-view");
     detailedView.style.display = "none"; // Initially hide detailed view
 
-    // Create a container for exercises and hide it initially
-    const exerciseContainer = document.createElement("div");
-    exerciseContainer.classList.add("exercise-container");
-    exerciseContainer.style.display = "none"; // Initially hide exercise container
-
     // Populate detailed view with workout information
     const workoutDescription = document.createElement("p");
-    workoutDescription.textContent = `Description: ${workout.description}`;
+    workoutDescription.classList.add("centered-text"); // Centered text class
+    workoutDescription.textContent = `Description:`;
+
+    const workoutDescriptionText = document.createElement("p");
+    workoutDescriptionText.classList.add("centered-text"); // Centered text class
+    workoutDescriptionText.textContent = workout.description;
 
     const workoutDuration = document.createElement("p");
+    workoutDuration.classList.add("centered-text"); // Centered text class
     workoutDuration.textContent = `Duration: ${workout.duration} minutes`;
 
     const workoutDifficulty = document.createElement("p");
+    workoutDifficulty.classList.add("centered-text"); // Centered text class
     workoutDifficulty.textContent = `Difficulty: ${workout.difficultyLevel}`;
 
     // Append elements to the initial view
     initialView.appendChild(workoutImage);
     initialView.appendChild(workoutTitle);
-    initialView.appendChild(toggleButton);
 
     // Append elements to the detailed view
     detailedView.appendChild(workoutDescription);
+    detailedView.appendChild(workoutDescriptionText);
     detailedView.appendChild(workoutDuration);
     detailedView.appendChild(workoutDifficulty);
-    detailedView.appendChild(exerciseContainer);
 
-    // Add click event listener to toggle detailed view
-    toggleButton.addEventListener("click", () => {
+    // Create a container for exercises
+    const exercisesContainer = document.createElement("div");
+    exercisesContainer.classList.add("exercises-container");
+
+    // Function to add exercises to the container
+    function addExercise(exercise) {
+        const exerciseInfo = document.createElement("p");
+        exerciseInfo.classList.add("centered-text"); // Centered text class
+        const exerciseText = `${exercise.exerciseName}: ${exercise.weight} lbs`;
+        const exerciseSetsReps = document.createElement("p");
+        exerciseSetsReps.classList.add("centered-text"); // Centered text class
+        exerciseSetsReps.textContent = `${exercise.sets}x ${exercise.reps}x`;
+        exerciseInfo.textContent = exerciseText;
+        exercisesContainer.appendChild(exerciseInfo);
+        exercisesContainer.appendChild(exerciseSetsReps);
+    }
+
+    // Get exercises by workout ID and add them to the container
+    async function loadExercises() {
+        try {
+            const response = await fetch(`http://localhost:8888/api/v1/exercises/workout/${workout.workoutId}`, {
+                method: "GET",
+                headers: headers,
+            });
+            const exerciseData = await response.json();
+            exerciseData.forEach(addExercise);
+        } catch (error) {
+            console.error("Error fetching exercises by workout ID:", error);
+        }
+    }
+
+    // Add click event listener to toggle detailed view and load exercises
+    initialView.addEventListener("click", () => {
         if (detailedView.style.display === "none") {
             detailedView.style.display = "block";
-            exerciseContainer.style.display = "block"; // Show exercise details
+            loadExercises(); // Load exercises when expanded
         } else {
             detailedView.style.display = "none";
-            exerciseContainer.style.display = "none"; // Hide exercise details
+            exercisesContainer.innerHTML = ""; // Clear exercises when collapsed
         }
     });
 
     // Append initial view and detailed view to the workout card
     workoutCard.appendChild(initialView);
     workoutCard.appendChild(detailedView);
-//    workoutCard.appendChild(exerciseContainer);
+    workoutCard.appendChild(exercisesContainer);
 
     return workoutCard;
 }
 
-// Function to fetch and populate workout cards
+// Function to fetch and populate workout cards (continued)
 async function getWorkouts(userId) {
     try {
         const response = await fetch(workoutsApiUrl, {
@@ -129,23 +155,8 @@ async function getWorkouts(userId) {
         workoutsList.innerHTML = "";
 
         // Create workout cards for each workout
-        workoutsData.forEach(async (workout) => {
+        workoutsData.forEach((workout) => {
             const workoutCard = createWorkoutCard(workout);
-
-            // Get exercises by workout ID
-            const exercises = await getExercisesByWorkoutId(workout.workoutId);
-
-            // Create a container for exercises and append them to the workout card
-            const exerciseContainer = document.createElement("div");
-            exerciseContainer.classList.add("exercise-container");
-
-            exercises.forEach((exercise) => {
-                const exerciseItem = document.createElement("p");
-                exerciseItem.textContent = `${exercise.exerciseName}, Sets: ${exercise.sets}, Reps: ${exercise.reps}, Weight: ${exercise.weight}`;
-                exerciseContainer.appendChild(exerciseItem);
-            });
-
-            workoutCard.appendChild(exerciseContainer);
 
             // Append the workout card to the workouts list
             workoutsList.appendChild(workoutCard);
@@ -156,19 +167,7 @@ async function getWorkouts(userId) {
     }
 }
 
-// Function to get exercises by workout ID
-async function getExercisesByWorkoutId(workoutId) {
-    try {
-        const response = await fetch(`http://localhost:8888/api/v1/exercises/workout/${workoutId}`, {
-            method: "GET",
-            headers: headers,
-        });
-        const exerciseData = await response.json();
-        return exerciseData;
-    } catch (error) {
-        console.error("Error fetching exercises by workout ID:", error);
-    }
-}
+
 
 // Call the functions to fetch and populate user data and workout cards
 getUserInfo(userId);

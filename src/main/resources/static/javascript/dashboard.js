@@ -6,6 +6,12 @@ console.log(userId);
 // DOM Elements
 const userStatsContainer = document.getElementById("user-stats");
 const workoutsList = document.getElementById("workouts-list");
+const workoutDetails = document.querySelector(".workoutDetails");
+const workoutTitleElement = document.getElementById("workoutTitle");
+const workoutDescriptionElement = document.getElementById("workoutDescription");
+const workoutDurationElement = document.getElementById("workoutDuration");
+const workoutDifficultyElement = document.getElementById("workoutDifficulty");
+const exerciseListElement = document.getElementById("exerciseList");
 
 // Headers
 const headers = {
@@ -51,6 +57,17 @@ function createWorkoutCard(workout) {
     const initialView = document.createElement("div");
     initialView.classList.add("initial-view");
 
+    // Create a div for the close "x" icon
+    const closeIcon = document.createElement("div");
+    closeIcon.classList.add("close-icon");
+    closeIcon.textContent = "x"; // You can customize the styling of this "x" icon with CSS
+
+    // Create an event listener to delete the workout
+    closeIcon.addEventListener("click", (event) => {
+        event.stopPropagation(); // Prevent the click from propagating to the workout card
+        deleteWorkout(workout.workoutId);
+    });
+
     const workoutImage = document.createElement("img");
     workoutImage.src = "https://www.mensjournal.com/.image/t_share/MTk2MTM3NDUxNzA0NzU1MzQ1/man-lifting-main.jpg"; // Set the image source
     workoutImage.alt = "Workout Image";
@@ -60,61 +77,53 @@ function createWorkoutCard(workout) {
     workoutTitle.classList.add("workout-title");
     workoutTitle.textContent = workout.title;
 
-//    // Add a button to show/hide detailed view
-//    const toggleButton = document.createElement("button");
-//    toggleButton.classList.add("toggle-button");
-//    toggleButton.textContent = "Show Details";
+    // Add click event listener to show workout details when clicked
+    initialView.addEventListener("click", (event) => {
+        // Prevent the click event from propagating to the body click event
+        event.stopPropagation();
 
-    // Create a div for the detailed view (hidden by default)
-    const detailedView = document.createElement("div");
-    detailedView.classList.add("detailed-view");
-    detailedView.style.display = "none"; // Initially hide detailed view
+        // Populate workout details
+        workoutTitleElement.textContent = workout.title;
+        workoutDescriptionElement.textContent = `Description: ${workout.description}`;
+        workoutDurationElement.textContent = `Duration: ${workout.duration} minutes`;
+        workoutDifficultyElement.textContent = `Difficulty: ${workout.difficultyLevel}`;
 
-    // Create a container for both workout and exercise details
-    const detailsContainer = document.createElement("div");
-    detailsContainer.classList.add("details-container");
-    detailsContainer.style.display = "none"; // Initially hide the container
+        // Load exercises
+        loadExercises(workout.workoutId);
 
-    // Populate detailed view with workout information
-    const workoutDescription = document.createElement("p");
-    workoutDescription.textContent = `Description: ${workout.description}`;
+        // Display workout details
+        workoutDetails.style.display = "block";
+    });
 
-    const workoutDuration = document.createElement("p");
-    workoutDuration.textContent = `Duration: ${workout.duration} minutes`;
+    // Add click event listener to the document body
+    document.body.addEventListener("click", (event) => {
+        const clickedElement = event.target;
 
-    const workoutDifficulty = document.createElement("p");
-    workoutDifficulty.textContent = `Difficulty: ${workout.difficultyLevel}`;
-
-    // Append elements to the initial view
-    initialView.appendChild(workoutImage);
-    initialView.appendChild(workoutTitle);
-//    initialView.appendChild(toggleButton);
-
-    // Append elements to the detailed view
-    detailedView.appendChild(workoutDescription);
-    detailedView.appendChild(workoutDuration);
-    detailedView.appendChild(workoutDifficulty);
-
-    // Add click event listener to toggle detailed view and exercises
-    workoutCard.addEventListener("click", () => {
-        if (detailedView.style.display === "none") {
-            detailedView.style.display = "block";
-            detailsContainer.style.display = "block"; // Show both workout and exercise details
-        } else {
-            detailedView.style.display = "none";
-            detailsContainer.style.display = "none"; // Hide both workout and exercise details
+        // Check if the click target is not the workout card
+        if (!workoutCard.contains(clickedElement)) {
+            // Hide the workout details
+            workoutDetails.style.display = "none";
         }
     });
 
-    // Append initial view and detailed view to the workout card
+    // Prevent clicks within workoutDetails from closing it
+    workoutDetails.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
+
+    // Append elements to the initial view
+    initialView.appendChild(closeIcon);
+    initialView.appendChild(workoutImage);
+    initialView.appendChild(workoutTitle);
+
+    // Append initial view to the workout card
     workoutCard.appendChild(initialView);
-    detailsContainer.appendChild(detailedView); // Append detailed view to the container
-    workoutCard.appendChild(detailsContainer); // Append container to the workout card
 
     return workoutCard;
 }
 
-// Function to fetch and populate workout cards
+
+// Function to fetch and populate workout cards (continued)
 async function getWorkouts(userId) {
     try {
         const response = await fetch(workoutsApiUrl, {
@@ -127,18 +136,8 @@ async function getWorkouts(userId) {
         workoutsList.innerHTML = "";
 
         // Create workout cards for each workout
-        workoutsData.forEach(async (workout) => {
+        workoutsData.forEach((workout) => {
             const workoutCard = createWorkoutCard(workout);
-
-            // Get exercises by workout ID
-            const exercises = await getExercisesByWorkoutId(workout.workoutId);
-
-            // Populate detailed view with exercise information
-            exercises.forEach((exercise) => {
-                const exerciseItem = document.createElement("p");
-                exerciseItem.textContent = `${exercise.exerciseName}, Sets: ${exercise.sets}, Reps: ${exercise.reps}, Weight: ${exercise.weight}`;
-                workoutCard.querySelector(".detailed-view").appendChild(exerciseItem);
-            });
 
             // Append the workout card to the workouts list
             workoutsList.appendChild(workoutCard);
@@ -149,15 +148,99 @@ async function getWorkouts(userId) {
     }
 }
 
-// Function to get exercises by workout ID
-async function getExercisesByWorkoutId(workoutId) {
+// Function to delete a workout by ID
+function deleteWorkout(workoutId) {
+    // Make an API request to delete the workout by ID
+    fetch(`http://localhost:8888/api/v1/workouts/${workoutId}`, {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // Workout deleted successfully, you can update the UI or take other actions as needed
+            console.log(`Workout with ID ${workoutId} deleted successfully.`);
+        } else {
+            // Handle errors or display an error message
+            console.error(`Error deleting workout with ID ${workoutId}`);
+        }
+    })
+    .catch(error => {
+        console.error("Error deleting workout:", error);
+    });
+}
+
+// Function to load exercises by workout ID and populate the exerciseList
+async function loadExercises(workoutId) {
     try {
         const response = await fetch(`http://localhost:8888/api/v1/exercises/workout/${workoutId}`, {
             method: "GET",
             headers: headers,
         });
         const exerciseData = await response.json();
-        return exerciseData;
+
+        // Clear existing exercise list
+        exerciseListElement.innerHTML = "";
+
+        // Create a table to organize the exercises
+        const exerciseTable = document.createElement("table");
+        exerciseTable.classList.add("exercise-table");
+
+        // Create table headers row
+        const headersRow = document.createElement("tr");
+
+        // Create headers for Exercise, Weight, and Sets/Reps
+        const exerciseHeader = document.createElement("th");
+        exerciseHeader.textContent = "Exercise";
+        const weightHeader = document.createElement("th");
+        weightHeader.textContent = "Weight";
+        const setsRepsHeader = document.createElement("th");
+        setsRepsHeader.textContent = "Sets";
+
+        // Append headers to the headers row
+        headersRow.appendChild(exerciseHeader);
+        headersRow.appendChild(weightHeader);
+        headersRow.appendChild(setsRepsHeader);
+
+        // Append headers row to the table
+        exerciseTable.appendChild(headersRow);
+
+        // Loop through exercise data
+        exerciseData.forEach((exercise) => {
+            // Create a row for each exercise
+            const exerciseRow = document.createElement("tr");
+
+            // Create a cell for exercise name
+            const exerciseCell = document.createElement("td");
+            exerciseCell.textContent = exercise.exerciseName;
+            exerciseRow.appendChild(exerciseCell);
+
+            // Create a cell for weight
+            const weightCell = document.createElement("td");
+            weightCell.textContent = `${exercise.weight} lbs`;
+            exerciseRow.appendChild(weightCell);
+
+            // Create a cell for sets and reps
+            const setsRepsCell = document.createElement("td");
+
+            // Create an array to hold the repetitions
+            const repsArray = [];
+            for (let i = 0; i < exercise.sets; i++) {
+                repsArray.push(`${exercise.reps}x`);
+            }
+
+            // Format sets and reps
+            setsRepsCell.textContent = repsArray.join(" ");
+            exerciseRow.appendChild(setsRepsCell);
+
+            // Add the exercise row to the table
+            exerciseTable.appendChild(exerciseRow);
+        });
+
+        // Append the table to the exercise list element
+        exerciseListElement.appendChild(exerciseTable);
+
     } catch (error) {
         console.error("Error fetching exercises by workout ID:", error);
     }

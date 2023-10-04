@@ -42,8 +42,6 @@ const createExercise = async () => {
     document.getElementById("exercise-weight").value = "";
     document.getElementById("exercise-notes").value = "";
 
-//////////////////////////////////////////////////////////////////////////////////
-
     // Update the "Added Exercises" section
         const exerciseTable = document.getElementById("exercise-table");
 
